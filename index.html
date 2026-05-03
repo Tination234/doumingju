@@ -232,7 +232,7 @@ body { background: #FAF4E8; font-family: 'Lora', Georgia, serif; color: var(--in
 
 <script>
 const GEMINI_API_KEY = 'AIzaSyBQ_H3AC64LmVif71rMEHGxE8-d6K0UAfc';
-const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_API_KEY;
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_API_KEY;
 
 const SYSTEM_PROMPT = `You are the tea master of 斗茗居 (Dou Mingju), a home-based artisan tea business. You are warm, knowledgeable, and poetic in your explanations. You teach tea knowledge in a fun, accessible way to people of all levels — from beginners to enthusiasts. You speak with gentle authority and occasional Chinese tea terms (always explained). You specialise in: the six tea types, aged/old tea (especially pu-erh and white tea), how to identify good vs poor quality tea, brewing techniques, terroir, and storage. Keep responses to 3-5 sentences — clear, warm, and memorable. End with a small practical tip or poetic observation when appropriate.`;
 
@@ -269,12 +269,13 @@ async function askQuestion(msg) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents: chatHistory
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: chatHistory,
+        generationConfig: { maxOutputTokens: 400 }
       })
     });
     const data = await res.json();
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'I could not find an answer. Please try again.';
+    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || (data?.error ? 'Error: ' + data.error.message : 'I could not find an answer. Please try again.');
     aiDiv.classList.remove('loading');
     aiDiv.textContent = reply;
     chatHistory.push({ role: 'model', parts: [{ text: reply }] });
