@@ -1,562 +1,122 @@
-
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>斗茗居 — The Art of Tea</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Ma+Shan+Zheng&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Ma+Shan+Zheng&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --ink: #2C1A0E;
-    --ink-mid: #5C3D1E;
-    --ink-light: #9C7A5A;
-    --parchment: #F5EDD8;
-    --parchment-dark: #E8D8B8;
-    --gold: #C4923A;
-    --gold-light: #E8C27A;
-    --moss: #4A5E3A;
-    --moss-light: #7A8E6A;
-    --rust: #8B3A2A;
-    --cream: #FAF4E8;
-  }
-
-  body {
-    background: transparent;
-    font-family: 'Lora', Georgia, serif;
-    color: var(--ink);
-    min-height: 100vh;
-  }
-
-  .app-shell {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 0 0 2rem;
-  }
-
-  .header {
-    text-align: center;
-    padding: 2rem 1rem 1rem;
-    position: relative;
-  }
-
-  .header-brush {
-    font-family: 'Ma Shan Zheng', cursive;
-    font-size: 38px;
-    color: var(--ink);
-    letter-spacing: 6px;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-
-  .header-sub {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--ink-light);
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-  }
-
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0.5rem 0 1.5rem;
-  }
-
-  .divider-line {
-    flex: 1;
-    height: 0.5px;
-    background: var(--gold);
-    opacity: 0.6;
-  }
-
-  .divider-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--gold);
-  }
-
-  .nav-tabs {
-    display: flex;
-    gap: 2px;
-    padding: 0 1rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 0.5px solid var(--gold);
-    opacity: 0.85;
-  }
-
-  .nav-tab {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 12px;
-    letter-spacing: 1px;
-    padding: 8px 14px;
-    cursor: pointer;
-    color: var(--ink-light);
-    border: none;
-    background: none;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -0.5px;
-    transition: color 0.2s, border-color 0.2s;
-  }
-
-  .nav-tab.active {
-    color: var(--ink);
-    border-bottom-color: var(--gold);
-    font-weight: 600;
-  }
-
-  .nav-tab:hover:not(.active) {
-    color: var(--ink-mid);
-  }
-
-  .panel {
-    display: none;
-    padding: 0 1rem;
-    animation: fadeIn 0.3s ease;
-  }
-
-  .panel.active { display: block; }
-
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* ─── AI CHAT SECTION ─── */
-  .chat-intro {
-    background: linear-gradient(135deg, #F5EDD8 0%, #EDE0C8 100%);
-    border: 0.5px solid var(--gold);
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-    margin-bottom: 1rem;
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-  }
-
-  .tea-master-icon {
-    font-size: 28px;
-    line-height: 1;
-    flex-shrink: 0;
-  }
-
-  .chat-intro p {
-    font-size: 13px;
-    line-height: 1.7;
-    color: var(--ink-mid);
-    font-style: italic;
-  }
-
-  .chat-messages {
-    min-height: 200px;
-    max-height: 320px;
-    overflow-y: auto;
-    margin-bottom: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .msg {
-    max-width: 85%;
-    padding: 10px 14px;
-    border-radius: 12px;
-    font-size: 13.5px;
-    line-height: 1.65;
-  }
-
-  .msg-user {
-    align-self: flex-end;
-    background: var(--ink);
-    color: #F5EDD8;
-    border-bottom-right-radius: 3px;
-  }
-
-  .msg-ai {
-    align-self: flex-start;
-    background: #F5EDD8;
-    border: 0.5px solid var(--gold);
-    color: var(--ink);
-    border-bottom-left-radius: 3px;
-  }
-
-  .msg-ai.loading {
-    color: var(--ink-light);
-    font-style: italic;
-  }
-
-  .quick-qs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 10px;
-  }
-
-  .quick-q {
-    font-size: 11.5px;
-    padding: 5px 11px;
-    border: 0.5px solid var(--gold);
-    border-radius: 20px;
-    background: #FAF4E8;
-    color: var(--ink-mid);
-    cursor: pointer;
-    font-family: 'Noto Serif SC', serif;
-    letter-spacing: 0.3px;
-    transition: background 0.15s, color 0.15s;
-  }
-
-  .quick-q:hover {
-    background: var(--gold);
-    color: #FAF4E8;
-  }
-
-  .chat-input-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-
-  .chat-input {
-    flex: 1;
-    padding: 9px 14px;
-    border: 0.5px solid var(--gold);
-    border-radius: 8px;
-    background: #FAF4E8;
-    font-family: 'Lora', serif;
-    font-size: 13px;
-    color: var(--ink);
-    outline: none;
-  }
-
-  .chat-input:focus { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(196,146,58,0.15); }
-
-  .send-btn {
-    padding: 9px 18px;
-    background: var(--ink);
-    color: #F5EDD8;
-    border: none;
-    border-radius: 8px;
-    font-family: 'Noto Serif SC', serif;
-    font-size: 12px;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  .send-btn:hover { background: var(--ink-mid); }
-  .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  /* ─── KNOWLEDGE CARDS ─── */
-  .section-title {
-    font-family: 'Ma Shan Zheng', cursive;
-    font-size: 22px;
-    color: var(--ink);
-    letter-spacing: 3px;
-    margin-bottom: 0.75rem;
-  }
-
-  .knowledge-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px;
-    margin-bottom: 1.5rem;
-  }
-
-  .know-card {
-    background: #FAF4E8;
-    border: 0.5px solid var(--gold);
-    border-radius: 12px;
-    padding: 1rem;
-    cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .know-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--gold);
-    opacity: 0;
-    transition: opacity 0.15s;
-  }
-
-  .know-card:hover { transform: translateY(-2px); }
-  .know-card:hover::before { opacity: 1; }
-
-  .know-card-icon { font-size: 26px; margin-bottom: 8px; display: block; }
-  .know-card-zh { font-family: 'Ma Shan Zheng', cursive; font-size: 18px; color: var(--ink); letter-spacing: 2px; }
-  .know-card-en { font-size: 11px; color: var(--ink-light); letter-spacing: 0.5px; margin-top: 2px; font-family: 'Noto Serif SC', serif; }
-
-  .detail-panel {
-    display: none;
-    background: #F5EDD8;
-    border: 0.5px solid var(--gold);
-    border-radius: 12px;
-    padding: 1.25rem;
-    margin-bottom: 1rem;
-    animation: fadeIn 0.25s ease;
-  }
-
-  .detail-panel.open { display: block; }
-
-  .detail-title {
-    font-family: 'Ma Shan Zheng', cursive;
-    font-size: 22px;
-    color: var(--ink);
-    letter-spacing: 2px;
-    margin-bottom: 6px;
-  }
-
-  .detail-body {
-    font-size: 13.5px;
-    line-height: 1.8;
-    color: var(--ink-mid);
-  }
-
-  .close-detail {
-    float: right;
-    font-size: 11px;
-    color: var(--ink-light);
-    cursor: pointer;
-    font-family: 'Noto Serif SC', serif;
-    letter-spacing: 0.5px;
-    padding: 2px 8px;
-    border: 0.5px solid var(--gold);
-    border-radius: 20px;
-  }
-
-  .close-detail:hover { color: var(--ink); }
-
-  /* ─── GOOD VS BAD TEA ─── */
-  .compare-intro {
-    font-size: 13px;
-    color: var(--ink-mid);
-    line-height: 1.7;
-    margin-bottom: 1rem;
-    font-style: italic;
-  }
-
-  .compare-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 1.5rem;
-  }
-
-  .compare-col {
-    border-radius: 12px;
-    padding: 1rem;
-  }
-
-  .compare-col.good {
-    background: #EFF5E8;
-    border: 0.5px solid var(--moss-light);
-  }
-
-  .compare-col.bad {
-    background: #F5EAE8;
-    border: 0.5px solid #C4826A;
-  }
-
-  .compare-col-title {
-    font-family: 'Ma Shan Zheng', cursive;
-    font-size: 18px;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-  }
-
-  .compare-col.good .compare-col-title { color: var(--moss); }
-  .compare-col.bad .compare-col-title { color: var(--rust); }
-
-  .compare-item {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 8px;
-    align-items: flex-start;
-  }
-
-  .compare-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    margin-top: 6px;
-  }
-
-  .good .compare-dot { background: var(--moss); }
-  .bad .compare-dot { background: var(--rust); }
-
-  .compare-item p {
-    font-size: 12.5px;
-    line-height: 1.6;
-    color: var(--ink-mid);
-  }
-
-  /* ─── OLD TEA SECTION ─── */
-  .old-tea-banner {
-    background: var(--ink);
-    border-radius: 12px;
-    padding: 1.25rem;
-    margin-bottom: 1rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .old-tea-banner::after {
-    content: '茶';
-    position: absolute;
-    right: -10px;
-    top: -20px;
-    font-family: 'Ma Shan Zheng', cursive;
-    font-size: 100px;
-    color: rgba(196,146,58,0.08);
-    pointer-events: none;
-  }
-
-  .old-tea-title {
-    font-family: 'Ma Shan Zheng', cursive;
-    font-size: 26px;
-    color: var(--gold-light);
-    letter-spacing: 4px;
-    margin-bottom: 6px;
-  }
-
-  .old-tea-sub {
-    font-size: 12px;
-    color: rgba(232,200,120,0.7);
-    letter-spacing: 1.5px;
-    font-family: 'Noto Serif SC', serif;
-  }
-
-  .timeline {
-    position: relative;
-    padding-left: 24px;
-    margin-bottom: 1.5rem;
-  }
-
-  .timeline::before {
-    content: '';
-    position: absolute;
-    left: 6px;
-    top: 6px;
-    bottom: 0;
-    width: 0.5px;
-    background: var(--gold);
-    opacity: 0.5;
-  }
-
-  .timeline-item {
-    position: relative;
-    margin-bottom: 1rem;
-  }
-
-  .timeline-dot {
-    position: absolute;
-    left: -21px;
-    top: 5px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--gold);
-  }
-
-  .timeline-year {
-    font-family: 'Noto Serif SC', serif;
-    font-size: 11px;
-    color: var(--gold);
-    letter-spacing: 1px;
-    margin-bottom: 3px;
-  }
-
-  .timeline-text {
-    font-size: 13px;
-    color: var(--ink-mid);
-    line-height: 1.65;
-  }
-
-  /* ─── QUIZ ─── */
-  .quiz-card {
-    background: #FAF4E8;
-    border: 0.5px solid var(--gold);
-    border-radius: 12px;
-    padding: 1.25rem;
-    margin-bottom: 1rem;
-  }
-
-  .quiz-q {
-    font-size: 14px;
-    color: var(--ink);
-    line-height: 1.65;
-    margin-bottom: 1rem;
-    font-style: italic;
-  }
-
-  .quiz-options {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-  }
-
-  .quiz-opt {
-    padding: 9px 14px;
-    border: 0.5px solid var(--parchment-dark);
-    border-radius: 8px;
-    font-size: 13px;
-    color: var(--ink-mid);
-    cursor: pointer;
-    background: #FFF8F0;
-    transition: border-color 0.15s, background 0.15s;
-    font-family: 'Lora', serif;
-    text-align: left;
-  }
-
-  .quiz-opt:hover:not(:disabled) { border-color: var(--gold); background: #F5EDD8; }
-  .quiz-opt.correct { border-color: var(--moss); background: #EFF5E8; color: var(--moss); }
-  .quiz-opt.wrong { border-color: var(--rust); background: #F5EAE8; color: var(--rust); }
-
-  .quiz-feedback {
-    margin-top: 10px;
-    font-size: 13px;
-    line-height: 1.65;
-    color: var(--ink-mid);
-    font-style: italic;
-    display: none;
-  }
-
-  .quiz-feedback.visible { display: block; }
-
-  .quiz-next {
-    margin-top: 10px;
-    padding: 8px 18px;
-    background: transparent;
-    border: 0.5px solid var(--gold);
-    border-radius: 8px;
-    color: var(--ink);
-    font-family: 'Noto Serif SC', serif;
-    font-size: 12px;
-    letter-spacing: 1px;
-    cursor: pointer;
-    display: none;
-  }
-
-  .quiz-next.visible { display: inline-block; }
-  .quiz-next:hover { background: #F5EDD8; }
-
-  .score-display {
-    text-align: center;
-    font-family: 'Noto Serif SC', serif;
-    font-size: 12px;
-    color: var(--ink-light);
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-  }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink: #2C1A0E;
+  --ink-mid: #5C3D1E;
+  --ink-light: #9C7A5A;
+  --parchment: #F5EDD8;
+  --parchment-dark: #E8D8B8;
+  --gold: #C4923A;
+  --gold-light: #E8C27A;
+  --moss: #4A5E3A;
+  --moss-light: #7A8E6A;
+  --rust: #8B3A2A;
+  --cream: #FAF4E8;
+}
+body { background: #FAF4E8; font-family: 'Lora', Georgia, serif; color: var(--ink); min-height: 100vh; }
+.app-shell { max-width: 720px; margin: 0 auto; padding: 0 0 2rem; }
+.header { text-align: center; padding: 2rem 1rem 1rem; }
+.header-brush { font-family: 'Ma Shan Zheng', cursive; font-size: 42px; color: var(--ink); letter-spacing: 6px; line-height: 1; margin-bottom: 4px; }
+.header-sub { font-family: 'Noto Serif SC', serif; font-size: 11px; letter-spacing: 4px; color: var(--ink-light); text-transform: uppercase; margin-bottom: 1rem; }
+.divider { display: flex; align-items: center; gap: 10px; margin: 0.5rem 0 1.5rem; }
+.divider-line { flex: 1; height: 0.5px; background: var(--gold); opacity: 0.6; }
+.divider-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+.nav-tabs { display: flex; gap: 2px; padding: 0 1rem; margin-bottom: 1.5rem; border-bottom: 0.5px solid var(--gold); opacity: 0.85; overflow-x: auto; }
+.nav-tab { font-family: 'Noto Serif SC', serif; font-size: 12px; letter-spacing: 1px; padding: 8px 14px; cursor: pointer; color: var(--ink-light); border: none; background: none; border-bottom: 2px solid transparent; margin-bottom: -0.5px; transition: color 0.2s, border-color 0.2s; white-space: nowrap; }
+.nav-tab.active { color: var(--ink); border-bottom-color: var(--gold); font-weight: 600; }
+.nav-tab:hover:not(.active) { color: var(--ink-mid); }
+.panel { display: none; padding: 0 1rem; animation: fadeIn 0.3s ease; }
+.panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* CHAT */
+.chat-intro { background: linear-gradient(135deg, #F5EDD8 0%, #EDE0C8 100%); border: 0.5px solid var(--gold); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; display: flex; gap: 12px; align-items: flex-start; }
+.tea-master-icon { font-size: 28px; line-height: 1; flex-shrink: 0; }
+.chat-intro p { font-size: 13px; line-height: 1.7; color: var(--ink-mid); font-style: italic; }
+.chat-messages { min-height: 200px; max-height: 340px; overflow-y: auto; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 10px; }
+.msg { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 13.5px; line-height: 1.65; }
+.msg-user { align-self: flex-end; background: var(--ink); color: #F5EDD8; border-bottom-right-radius: 3px; }
+.msg-ai { align-self: flex-start; background: #F5EDD8; border: 0.5px solid var(--gold); color: var(--ink); border-bottom-left-radius: 3px; }
+.msg-ai.loading { color: var(--ink-light); font-style: italic; }
+.quick-qs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.quick-q { font-size: 11.5px; padding: 5px 11px; border: 0.5px solid var(--gold); border-radius: 20px; background: #FAF4E8; color: var(--ink-mid); cursor: pointer; font-family: 'Noto Serif SC', serif; letter-spacing: 0.3px; transition: background 0.15s, color 0.15s; }
+.quick-q:hover { background: var(--gold); color: #FAF4E8; }
+.chat-input-row { display: flex; gap: 8px; align-items: center; }
+.chat-input { flex: 1; padding: 9px 14px; border: 0.5px solid var(--gold); border-radius: 8px; background: #FAF4E8; font-family: 'Lora', serif; font-size: 13px; color: var(--ink); outline: none; }
+.chat-input:focus { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(196,146,58,0.15); }
+.send-btn { padding: 9px 18px; background: var(--ink); color: #F5EDD8; border: none; border-radius: 8px; font-family: 'Noto Serif SC', serif; font-size: 12px; letter-spacing: 1px; cursor: pointer; transition: background 0.2s; }
+.send-btn:hover { background: var(--ink-mid); }
+.send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* LEARN */
+.section-title { font-family: 'Ma Shan Zheng', cursive; font-size: 22px; color: var(--ink); letter-spacing: 3px; margin-bottom: 0.75rem; }
+.knowledge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+.know-card { background: #FAF4E8; border: 0.5px solid var(--gold); border-radius: 12px; padding: 1rem; cursor: pointer; transition: transform 0.15s; text-align: center; position: relative; overflow: hidden; }
+.know-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gold); opacity: 0; transition: opacity 0.15s; }
+.know-card:hover { transform: translateY(-2px); }
+.know-card:hover::before { opacity: 1; }
+.know-card-icon { font-size: 26px; margin-bottom: 8px; display: block; }
+.know-card-zh { font-family: 'Ma Shan Zheng', cursive; font-size: 18px; color: var(--ink); letter-spacing: 2px; }
+.know-card-en { font-size: 11px; color: var(--ink-light); letter-spacing: 0.5px; margin-top: 2px; font-family: 'Noto Serif SC', serif; }
+.detail-panel { display: none; background: #F5EDD8; border: 0.5px solid var(--gold); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; animation: fadeIn 0.25s ease; }
+.detail-panel.open { display: block; }
+.detail-title { font-family: 'Ma Shan Zheng', cursive; font-size: 22px; color: var(--ink); letter-spacing: 2px; margin-bottom: 6px; }
+.detail-body { font-size: 13.5px; line-height: 1.8; color: var(--ink-mid); }
+.close-detail { float: right; font-size: 11px; color: var(--ink-light); cursor: pointer; font-family: 'Noto Serif SC', serif; letter-spacing: 0.5px; padding: 2px 8px; border: 0.5px solid var(--gold); border-radius: 20px; }
+.close-detail:hover { color: var(--ink); }
+
+/* COMPARE */
+.compare-intro { font-size: 13px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 1rem; font-style: italic; }
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+.compare-col { border-radius: 12px; padding: 1rem; }
+.compare-col.good { background: #EFF5E8; border: 0.5px solid var(--moss-light); }
+.compare-col.bad { background: #F5EAE8; border: 0.5px solid #C4826A; }
+.compare-col-title { font-family: 'Ma Shan Zheng', cursive; font-size: 18px; letter-spacing: 2px; margin-bottom: 10px; }
+.compare-col.good .compare-col-title { color: var(--moss); }
+.compare-col.bad .compare-col-title { color: var(--rust); }
+.compare-item { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start; }
+.compare-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+.good .compare-dot { background: var(--moss); }
+.bad .compare-dot { background: var(--rust); }
+.compare-item p { font-size: 12.5px; line-height: 1.6; color: var(--ink-mid); }
+
+/* OLD TEA */
+.old-tea-banner { background: var(--ink); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; text-align: center; position: relative; overflow: hidden; }
+.old-tea-banner::after { content: '茶'; position: absolute; right: -10px; top: -20px; font-family: 'Ma Shan Zheng', cursive; font-size: 100px; color: rgba(196,146,58,0.08); pointer-events: none; }
+.old-tea-title { font-family: 'Ma Shan Zheng', cursive; font-size: 26px; color: var(--gold-light); letter-spacing: 4px; margin-bottom: 6px; }
+.old-tea-sub { font-size: 12px; color: rgba(232,200,120,0.7); letter-spacing: 1.5px; font-family: 'Noto Serif SC', serif; }
+.timeline { position: relative; padding-left: 24px; margin-bottom: 1.5rem; }
+.timeline::before { content: ''; position: absolute; left: 6px; top: 6px; bottom: 0; width: 0.5px; background: var(--gold); opacity: 0.5; }
+.timeline-item { position: relative; margin-bottom: 1rem; }
+.timeline-dot { position: absolute; left: -21px; top: 5px; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+.timeline-year { font-family: 'Noto Serif SC', serif; font-size: 11px; color: var(--gold); letter-spacing: 1px; margin-bottom: 3px; }
+.timeline-text { font-size: 13px; color: var(--ink-mid); line-height: 1.65; }
+
+/* QUIZ */
+.quiz-card { background: #FAF4E8; border: 0.5px solid var(--gold); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+.quiz-q { font-size: 14px; color: var(--ink); line-height: 1.65; margin-bottom: 1rem; font-style: italic; }
+.quiz-options { display: flex; flex-direction: column; gap: 7px; }
+.quiz-opt { padding: 9px 14px; border: 0.5px solid var(--parchment-dark); border-radius: 8px; font-size: 13px; color: var(--ink-mid); cursor: pointer; background: #FFF8F0; transition: border-color 0.15s, background 0.15s; font-family: 'Lora', serif; text-align: left; }
+.quiz-opt:hover:not(:disabled) { border-color: var(--gold); background: #F5EDD8; }
+.quiz-opt.correct { border-color: var(--moss); background: #EFF5E8; color: var(--moss); }
+.quiz-opt.wrong { border-color: var(--rust); background: #F5EAE8; color: var(--rust); }
+.quiz-feedback { margin-top: 10px; font-size: 13px; line-height: 1.65; color: var(--ink-mid); font-style: italic; display: none; }
+.quiz-feedback.visible { display: block; }
+.quiz-next { margin-top: 10px; padding: 8px 18px; background: transparent; border: 0.5px solid var(--gold); border-radius: 8px; color: var(--ink); font-family: 'Noto Serif SC', serif; font-size: 12px; letter-spacing: 1px; cursor: pointer; display: none; }
+.quiz-next.visible { display: inline-block; }
+.quiz-next:hover { background: #F5EDD8; }
+.score-display { text-align: center; font-family: 'Noto Serif SC', serif; font-size: 12px; color: var(--ink-light); letter-spacing: 1px; margin-bottom: 10px; }
 </style>
-
+</head>
+<body>
 <div class="app-shell">
-  <h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">斗茗居 Tea Education App — learn about tea, compare quality, and discover aged tea</h2>
-
   <div class="header">
     <div class="header-brush">斗茗居</div>
     <div class="header-sub">Dou Mingju · The Art of Tea</div>
@@ -568,14 +128,14 @@
   </div>
 
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('ask')">問茶 Ask</button>
-    <button class="nav-tab" onclick="switchTab('learn')">識茶 Learn</button>
-    <button class="nav-tab" onclick="switchTab('compare')">辨茶 Compare</button>
-    <button class="nav-tab" onclick="switchTab('old')">老茶 Old Tea</button>
-    <button class="nav-tab" onclick="switchTab('quiz')">試茶 Quiz</button>
+    <button class="nav-tab active" onclick="switchTab('ask',this)">問茶 Ask</button>
+    <button class="nav-tab" onclick="switchTab('learn',this)">識茶 Learn</button>
+    <button class="nav-tab" onclick="switchTab('compare',this)">辨茶 Compare</button>
+    <button class="nav-tab" onclick="switchTab('old',this)">老茶 Old Tea</button>
+    <button class="nav-tab" onclick="switchTab('quiz',this)">試茶 Quiz</button>
   </div>
 
-  <!-- ASK panel -->
+  <!-- ASK -->
   <div id="panel-ask" class="panel active">
     <div class="chat-intro">
       <div class="tea-master-icon">🍵</div>
@@ -594,40 +154,16 @@
     </div>
   </div>
 
-  <!-- LEARN panel -->
+  <!-- LEARN -->
   <div id="panel-learn" class="panel">
     <p class="compare-intro">Tap any topic to unfurl its wisdom.</p>
     <div class="knowledge-grid">
-      <div class="know-card" onclick="showDetail('sixTypes')">
-        <span class="know-card-icon">🌿</span>
-        <div class="know-card-zh">六大茶類</div>
-        <div class="know-card-en">Six Tea Types</div>
-      </div>
-      <div class="know-card" onclick="showDetail('terroir')">
-        <span class="know-card-icon">🏔️</span>
-        <div class="know-card-zh">山場</div>
-        <div class="know-card-en">Terroir</div>
-      </div>
-      <div class="know-card" onclick="showDetail('processing')">
-        <span class="know-card-icon">☀️</span>
-        <div class="know-card-zh">製茶工藝</div>
-        <div class="know-card-en">Processing</div>
-      </div>
-      <div class="know-card" onclick="showDetail('storage')">
-        <span class="know-card-icon">🏺</span>
-        <div class="know-card-zh">倉儲</div>
-        <div class="know-card-en">Storage</div>
-      </div>
-      <div class="know-card" onclick="showDetail('brewing')">
-        <span class="know-card-icon">🫖</span>
-        <div class="know-card-zh">沖泡</div>
-        <div class="know-card-en">Brewing</div>
-      </div>
-      <div class="know-card" onclick="showDetail('aroma')">
-        <span class="know-card-icon">🌸</span>
-        <div class="know-card-zh">茶香</div>
-        <div class="know-card-en">Aroma</div>
-      </div>
+      <div class="know-card" onclick="showDetail('sixTypes')"><span class="know-card-icon">🌿</span><div class="know-card-zh">六大茶類</div><div class="know-card-en">Six Tea Types</div></div>
+      <div class="know-card" onclick="showDetail('terroir')"><span class="know-card-icon">🏔️</span><div class="know-card-zh">山場</div><div class="know-card-en">Terroir</div></div>
+      <div class="know-card" onclick="showDetail('processing')"><span class="know-card-icon">☀️</span><div class="know-card-zh">製茶工藝</div><div class="know-card-en">Processing</div></div>
+      <div class="know-card" onclick="showDetail('storage')"><span class="know-card-icon">🏺</span><div class="know-card-zh">倉儲</div><div class="know-card-en">Storage</div></div>
+      <div class="know-card" onclick="showDetail('brewing')"><span class="know-card-icon">🫖</span><div class="know-card-zh">沖泡</div><div class="know-card-en">Brewing</div></div>
+      <div class="know-card" onclick="showDetail('aroma')"><span class="know-card-icon">🌸</span><div class="know-card-zh">茶香</div><div class="know-card-en">Aroma</div></div>
     </div>
     <div class="detail-panel" id="detail-panel">
       <span class="close-detail" onclick="closeDetail()">關閉 ✕</span>
@@ -636,10 +172,10 @@
     </div>
   </div>
 
-  <!-- COMPARE panel -->
+  <!-- COMPARE -->
   <div id="panel-compare" class="panel">
     <p class="section-title">辨茶之道</p>
-    <p class="compare-intro">A discerning palate is cultivated over time. Here are the key signs that separate exceptional tea from ordinary — look, smell, and taste tell all.</p>
+    <p class="compare-intro">A discerning palate is cultivated over time. Here are the key signs that separate exceptional tea from ordinary.</p>
     <div class="compare-grid">
       <div class="compare-col good">
         <div class="compare-col-title">好茶 Good Tea</div>
@@ -651,7 +187,7 @@
       </div>
       <div class="compare-col bad">
         <div class="compare-col-title">劣茶 Poor Tea</div>
-        <div class="compare-item"><div class="compare-dot"></div><p><strong>Appearance:</strong> Broken, dusty, or uneven. Unnatural colour from over-processing or artificial additives.</p></div>
+        <div class="compare-item"><div class="compare-dot"></div><p><strong>Appearance:</strong> Broken, dusty, or uneven. Unnatural colour from over-processing or additives.</p></div>
         <div class="compare-item"><div class="compare-dot"></div><p><strong>Aroma:</strong> Flat, musty, or artificially perfumed. The scent disappears quickly.</p></div>
         <div class="compare-item"><div class="compare-dot"></div><p><strong>Liquor:</strong> Cloudy, dull, or muddy. Often overly dark from poor processing or mould.</p></div>
         <div class="compare-item"><div class="compare-dot"></div><p><strong>Taste:</strong> Harsh bitterness that does not transform. Dry, astringent aftertaste with no sweetness.</p></div>
@@ -664,42 +200,24 @@
     </div>
   </div>
 
-  <!-- OLD TEA panel -->
+  <!-- OLD TEA -->
   <div id="panel-old" class="panel">
     <div class="old-tea-banner">
       <div class="old-tea-title">老茶之道</div>
       <div class="old-tea-sub">The Way of Aged Tea</div>
     </div>
-
     <div style="margin:1rem 0 0.75rem;">
       <p style="font-size:13px;line-height:1.75;color:var(--ink-mid);">Old tea — particularly aged pu-erh and white tea — has become the focus of serious collectors and connoisseurs. This is not mere fashion; it is rooted in science, tradition, and the pursuit of complexity that only time can create.</p>
     </div>
-
     <div class="timeline">
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-year">Why Time Matters</div>
-        <div class="timeline-text">Live microbial cultures within compressed pu-erh continue to transform the tea over decades. Tannins mellow, bitterness fades, and entirely new aromatic compounds emerge — camphor, dates, dried fruit, aged wood.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-year">Rarity & Provenance</div>
-        <div class="timeline-text">As forests of ancient tea trees (古樹 gǔ shù) shrink and old-growth material becomes scarcer, teas made from century-old trees command extraordinary respect. The tree's age imparts a mineral depth and "throaty" body impossible to replicate in younger plants.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-year">Health & Gentleness</div>
-        <div class="timeline-text">Aged tea is gentler on the stomach. The harsh compounds that make young raw pu-erh challenging are transformed over time. Many people who cannot drink fresh tea find old tea smooth and soothing.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-year">The Return to Roots</div>
-        <div class="timeline-text">Modern tea culture is returning to old tea as a corrective to the fast-consumption era. At 斗茗居, we believe each cup of old tea is a dialogue across time — between the farmer who pressed it, the years that transformed it, and you who drink it now.</div>
-      </div>
+      <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-year">Why Time Matters</div><div class="timeline-text">Live microbial cultures within compressed pu-erh continue to transform the tea over decades. Tannins mellow, bitterness fades, and entirely new aromatic compounds emerge — camphor, dates, dried fruit, aged wood.</div></div>
+      <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-year">Rarity & Provenance</div><div class="timeline-text">As forests of ancient tea trees (古樹 gǔ shù) shrink and old-growth material becomes scarcer, teas made from century-old trees command extraordinary respect. The tree's age imparts a mineral depth and "throaty" body impossible to replicate in younger plants.</div></div>
+      <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-year">Health & Gentleness</div><div class="timeline-text">Aged tea is gentler on the stomach. The harsh compounds that make young raw pu-erh challenging are transformed over time. Many people who cannot drink fresh tea find old tea smooth and soothing.</div></div>
+      <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-year">The Return to Roots</div><div class="timeline-text">Modern tea culture is returning to old tea as a corrective to the fast-consumption era. At 斗茗居, we believe each cup of old tea is a dialogue across time — between the farmer who pressed it, the years that transformed it, and you who drink it now.</div></div>
     </div>
   </div>
 
-  <!-- QUIZ panel -->
+  <!-- QUIZ -->
   <div id="panel-quiz" class="panel">
     <p class="compare-intro">Test your knowledge with our tea wisdom quiz.</p>
     <div class="score-display" id="scoreDisplay">Question 1 of 6</div>
@@ -713,6 +231,9 @@
 </div>
 
 <script>
+const GEMINI_API_KEY = 'AIzaSyBQ_H3AC64LmVif71rMEHGxE8-d6K0UAfc';
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_API_KEY;
+
 const SYSTEM_PROMPT = `You are the tea master of 斗茗居 (Dou Mingju), a home-based artisan tea business. You are warm, knowledgeable, and poetic in your explanations. You teach tea knowledge in a fun, accessible way to people of all levels — from beginners to enthusiasts. You speak with gentle authority and occasional Chinese tea terms (always explained). You specialise in: the six tea types, aged/old tea (especially pu-erh and white tea), how to identify good vs poor quality tea, brewing techniques, terroir, and storage. Keep responses to 3-5 sentences — clear, warm, and memorable. End with a small practical tip or poetic observation when appropriate.`;
 
 let chatHistory = [];
@@ -739,26 +260,24 @@ async function askQuestion(msg) {
   aiDiv.textContent = 'The tea leaves are speaking…';
   msgs.appendChild(aiDiv);
   msgs.scrollTop = msgs.scrollHeight;
-
   sendBtn.disabled = true;
-  chatHistory.push({ role: 'user', content: msg });
+
+  chatHistory.push({ role: 'user', parts: [{ text: msg }] });
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch(GEMINI_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: SYSTEM_PROMPT,
-        messages: chatHistory
+        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: chatHistory
       })
     });
     const data = await res.json();
-    const reply = data.content.map(b => b.text || '').join('');
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'I could not find an answer. Please try again.';
     aiDiv.classList.remove('loading');
     aiDiv.textContent = reply;
-    chatHistory.push({ role: 'assistant', content: reply });
+    chatHistory.push({ role: 'model', parts: [{ text: reply }] });
   } catch(e) {
     aiDiv.classList.remove('loading');
     aiDiv.textContent = 'The connection to the tea house was lost. Please try again.';
@@ -768,46 +287,29 @@ async function askQuestion(msg) {
   msgs.scrollTop = msgs.scrollHeight;
 }
 
-function switchTab(id) {
+function switchTab(id, el) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('panel-' + id).classList.add('active');
-  event.target.classList.add('active');
+  el.classList.add('active');
 }
 
 const details = {
-  sixTypes: {
-    title: '六大茶類 — Six Tea Types',
-    body: 'All tea comes from one plant, Camellia sinensis, yet yields six profoundly different families. <strong>Green tea (綠茶)</strong> is unoxidised — fresh, grassy, delicate. <strong>White tea (白茶)</strong> is minimally processed, with silvery buds and a soft sweetness. <strong>Yellow tea (黃茶)</strong> undergoes a gentle "smothering" step, producing a mellow, less grassy cup. <strong>Oolong (烏龍)</strong> spans a wide range from lightly floral to deeply roasted. <strong>Black tea (紅茶)</strong> is fully oxidised — robust, malty, warming. Finally, <strong>dark/fermented tea (黑茶)</strong>, including pu-erh, undergoes microbial fermentation — the only tea that genuinely improves with age.'
-  },
-  terroir: {
-    title: '山場 — Terroir',
-    body: '山場 (shān chǎng) — literally "mountain place" — is the Chinese concept of terroir. Soil minerals, altitude, mist, rainfall, and even surrounding vegetation all imprint themselves on the tea leaf. A Wuyi Rock oolong grown on volcanic cliffs carries a mineral "rock flavour" (岩韻 yán yùn) that cannot be replicated in flat farmland. Ancient tea trees (古樹) draw nutrients from deep roots, producing leaves with greater complexity. This is why origin matters as much as variety.'
-  },
-  processing: {
-    title: '製茶工藝 — Processing',
-    body: 'The journey from fresh leaf to finished tea involves art and science in equal measure. Withering (萎凋) softens the leaf. Fixation (殺青) uses heat to halt oxidation in green teas. Rolling (揉捻) shapes the leaf and breaks cell walls, releasing essential oils. Oxidation (氧化) transforms green leaf to amber liquor. Fermentation (發酵) in pu-erh is a living process that continues for decades. Each step can be rushed — or given the time it deserves. The master craftsman knows the difference.'
-  },
-  storage: {
-    title: '倉儲 — Storage',
-    body: 'For aged teas, storage is destiny. "Dry storage" (乾倉) — cool, ventilated, with controlled humidity — allows slow, clean transformation, producing camphor and honey notes over years. "Wet storage" (濕倉) accelerates aging with high humidity but risks mould and a "warehouse taste." The finest aged teas are stored with the patience of a collector: away from light, moisture, heat, and strong odours. A well-stored 20-year pu-erh is a treasure; a poorly stored one is merely old.'
-  },
-  brewing: {
-    title: '沖泡 — Brewing',
-    body: 'The gongfu tea ceremony (功夫茶) teaches that brewing is attention. Use a small teapot or gaiwan; heat it first. Water temperature matters: 75–85°C for green and white teas, 90–95°C for oolong and pu-erh. Rinse the leaves once to open them. The first infusion is short — 15 to 30 seconds. Each subsequent steeping can be slightly longer. Good tea gives you 6–10 rounds. Pay attention to how it changes: this conversation between water and leaf is the whole point.'
-  },
-  aroma: {
-    title: '茶香 — Aroma',
-    body: 'Tea aromatics are astonishingly complex — over 600 volatile compounds have been identified. Freshly processed green tea carries vegetal, marine, or floral notes. Aged pu-erh evolves camphor (樟香), dates (棗香), and forest floor aromas. Wuyi oolongs carry orchid and "rocky" mineral character. To train your nose: smell the dry leaf, then the warmed empty cup, then the lid of the gaiwan after pouring. Each reveals a different layer. The aroma often tells you what the cup will taste like before you drink.'
-  }
+  sixTypes: { title: '六大茶類 — Six Tea Types', body: 'All tea comes from one plant, Camellia sinensis, yet yields six profoundly different families. <strong>Green tea (綠茶)</strong> is unoxidised — fresh, grassy, delicate. <strong>White tea (白茶)</strong> is minimally processed, with silvery buds and a soft sweetness. <strong>Yellow tea (黃茶)</strong> undergoes a gentle "smothering" step, producing a mellow cup. <strong>Oolong (烏龍)</strong> spans a wide range from lightly floral to deeply roasted. <strong>Black tea (紅茶)</strong> is fully oxidised — robust, malty, warming. Finally, <strong>dark/fermented tea (黑茶)</strong>, including pu-erh, undergoes microbial fermentation — the only tea that genuinely improves with age.' },
+  terroir: { title: '山場 — Terroir', body: '山場 (shān chǎng) — literally "mountain place" — is the Chinese concept of terroir. Soil minerals, altitude, mist, rainfall, and even surrounding vegetation all imprint themselves on the tea leaf. A Wuyi Rock oolong grown on volcanic cliffs carries a mineral "rock flavour" (岩韻 yán yùn) that cannot be replicated in flat farmland. Ancient tea trees (古樹) draw nutrients from deep roots, producing leaves with greater complexity.' },
+  processing: { title: '製茶工藝 — Processing', body: 'The journey from fresh leaf to finished tea involves art and science in equal measure. Withering (萎凋) softens the leaf. Fixation (殺青) uses heat to halt oxidation in green teas. Rolling (揉捻) shapes the leaf and breaks cell walls, releasing essential oils. Oxidation (氧化) transforms green leaf to amber liquor. Fermentation (發酵) in pu-erh is a living process that continues for decades. Each step can be rushed — or given the time it deserves.' },
+  storage: { title: '倉儲 — Storage', body: 'For aged teas, storage is destiny. "Dry storage" (乾倉) — cool, ventilated, with controlled humidity — allows slow, clean transformation, producing camphor and honey notes over years. "Wet storage" (濕倉) accelerates aging with high humidity but risks mould and a "warehouse taste." The finest aged teas are stored away from light, moisture, heat, and strong odours. A well-stored 20-year pu-erh is a treasure; a poorly stored one is merely old.' },
+  brewing: { title: '沖泡 — Brewing', body: 'The gongfu tea ceremony (功夫茶) teaches that brewing is attention. Use a small teapot or gaiwan; heat it first. Water temperature matters: 75–85°C for green and white teas, 90–95°C for oolong and pu-erh. Rinse the leaves once to open them. The first infusion is short — 15 to 30 seconds. Each subsequent steeping can be slightly longer. Good tea gives you 6–10 rounds.' },
+  aroma: { title: '茶香 — Aroma', body: 'Tea aromatics are astonishingly complex — over 600 volatile compounds have been identified. Freshly processed green tea carries vegetal, marine, or floral notes. Aged pu-erh evolves camphor (樟香), dates (棗香), and forest floor aromas. To train your nose: smell the dry leaf, then the warmed empty cup, then the lid of the gaiwan after pouring. Each reveals a different layer of the tea\'s story.' }
 };
 
 function showDetail(key) {
   const d = details[key];
   document.getElementById('detail-title').textContent = d.title;
   document.getElementById('detail-body').innerHTML = d.body;
-  document.getElementById('detail-panel').classList.add('open');
-  document.getElementById('detail-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  const panel = document.getElementById('detail-panel');
+  panel.classList.add('open');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function closeDetail() {
@@ -820,17 +322,15 @@ const quizData = [
   { q: 'A tea liquor appears cloudy and dull. What does this most likely indicate?', opts: ['The tea is very old and well-aged', 'High mineral content from mountain terroir', 'Poor processing, storage issues, or inferior leaf quality', 'It has been brewed at too low a temperature'], correct: 2, feedback: 'Well observed. Cloudiness usually signals something has gone wrong — poor processing, damp storage conditions, mould, or low-grade material. A good tea produces a clear, bright, jewel-like liquor.' },
   { q: 'What is 山場 (shān chǎng)?', opts: ['A style of tea ceremony', 'The Chinese concept of terroir — how mountain environment shapes tea character', 'A famous tea-producing village in Fujian', 'The first rinse of leaves before brewing'], correct: 1, feedback: 'Perfect. 山場 captures everything the land gives to the leaf — soil minerals, altitude, mist, rainfall, and the surrounding ecology. It is why the same cultivar tastes entirely different grown on different mountains.' },
   { q: 'Why is "dry storage" (乾倉) generally preferred for aging pu-erh?', opts: ['It speeds up fermentation for faster drinking', 'It produces a "warehouse taste" that collectors prize', 'It allows slow, clean transformation without risk of mould or off-flavours', 'It preserves the green colour of the compressed cake'], correct: 2, feedback: 'Correct. Dry storage — cool, ventilated, controlled humidity — lets pu-erh transform slowly and cleanly over years, developing camphor, honey, and deep earthen notes without the musty risk of wet storage.' },
-  { q: 'What water temperature is best for brewing a delicate white tea?', opts: ['Boiling (100°C) to fully open the leaves', '75–85°C to protect the delicate aromatics', '60°C for a very slow, cold-style extraction', 'Temperature doesn\'t matter for white tea'], correct: 1, feedback: 'Spot on. White tea — with its delicate silvery buds and light aromatics — needs cooler water (75–85°C). Boiling water scorches the leaves and turns the cup harsh and bitter, destroying what you paid for.' }
+  { q: 'What water temperature is best for brewing a delicate white tea?', opts: ['Boiling (100°C) to fully open the leaves', '75–85°C to protect the delicate aromatics', '60°C for a very slow, cold-style extraction', 'Temperature doesn\'t matter for white tea'], correct: 1, feedback: 'Spot on. White tea — with its delicate silvery buds and light aromatics — needs cooler water (75–85°C). Boiling water scorches the leaves and turns the cup harsh and bitter.' }
 ];
 
-let qIndex = 0;
-let score = 0;
-let answered = false;
+let qIndex = 0, score = 0, answered = false;
 
 function loadQuestion() {
   const q = quizData[qIndex];
   document.getElementById('quizQ').textContent = q.q;
-  document.getElementById('scoreDisplay').textContent = `Question ${qIndex + 1} of ${quizData.length}`;
+  document.getElementById('scoreDisplay').textContent = 'Question ' + (qIndex + 1) + ' of ' + quizData.length;
   const optsEl = document.getElementById('quizOpts');
   optsEl.innerHTML = '';
   q.opts.forEach((opt, i) => {
@@ -849,8 +349,7 @@ function answerQ(i) {
   if (answered) return;
   answered = true;
   const q = quizData[qIndex];
-  const btns = document.querySelectorAll('.quiz-opt');
-  btns.forEach((b, idx) => {
+  document.querySelectorAll('.quiz-opt').forEach((b, idx) => {
     b.disabled = true;
     if (idx === q.correct) b.classList.add('correct');
     else if (idx === i) b.classList.add('wrong');
@@ -859,26 +358,24 @@ function answerQ(i) {
   const fb = document.getElementById('quizFeedback');
   fb.textContent = q.feedback;
   fb.className = 'quiz-feedback visible';
-
   const nx = document.getElementById('quizNext');
-  if (qIndex < quizData.length - 1) {
-    nx.textContent = 'Next question →';
-  } else {
-    nx.textContent = `See my score (${score}/${quizData.length})`;
-  }
+  nx.textContent = qIndex < quizData.length - 1 ? 'Next question →' : 'See my score (' + score + '/' + quizData.length + ')';
   nx.className = 'quiz-next visible';
 }
 
 function nextQuestion() {
   qIndex++;
   if (qIndex >= quizData.length) {
-    document.getElementById('quizQ').textContent = `You answered ${score} of ${quizData.length} correctly.`;
+    document.getElementById('quizQ').textContent = 'You answered ' + score + ' of ' + quizData.length + ' correctly.';
     document.getElementById('quizOpts').innerHTML = '';
     const msg = score >= 5 ? '茶師 — Tea Master! Your knowledge is as rich as a 30-year pu-erh.' : score >= 3 ? '茶友 — Tea Friend! Keep tasting and learning.' : '茶生 — Tea Student. Every journey begins with a first cup.';
-    document.getElementById('quizFeedback').textContent = msg;
-    document.getElementById('quizFeedback').className = 'quiz-feedback visible';
-    document.getElementById('quizNext').textContent = 'Start again';
-    document.getElementById('quizNext').onclick = () => { qIndex = 0; score = 0; loadQuestion(); };
+    const fb = document.getElementById('quizFeedback');
+    fb.textContent = msg;
+    fb.className = 'quiz-feedback visible';
+    const nx = document.getElementById('quizNext');
+    nx.textContent = 'Start again';
+    nx.className = 'quiz-next visible';
+    nx.onclick = () => { qIndex = 0; score = 0; loadQuestion(); };
     document.getElementById('scoreDisplay').textContent = '';
     return;
   }
@@ -887,3 +384,5 @@ function nextQuestion() {
 
 loadQuestion();
 </script>
+</body>
+</html>
